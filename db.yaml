@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: todo-db
+  name: todo-db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-db
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: todo-db
+    spec:
+      containers:
+        - env:
+          - name: POSTGRES_DB
+            value: "todo-deall"
+          - name: POSTGRES_USER
+            value: "postgres"
+          - name: POSTGRES_PASSWORD
+            value: "postgres"
+          image: postgres:13
+          name: todo-db
+          ports:
+            - containerPort: 5432
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: todo-db
+  name: todo-db-service
+spec:
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: todo-db
+status:
+  loadBalancer: {}
